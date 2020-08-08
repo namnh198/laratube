@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Str;
-use Illumninate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Database\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
 {
@@ -14,7 +14,7 @@ class Model extends BaseModel
         parent::boot();
 
         static::creating(function($model) {
-            $model->{$model->getKeyName()} = Str::uuid();
+            $model->{$model->getKeyName()} = (string) Str::uuid();
         });
     }
 }
