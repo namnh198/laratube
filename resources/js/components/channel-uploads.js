@@ -11,28 +11,61 @@ Vue.component('channel-uploads', {
     data: () => ({
         selected: false,
         videos: [],
-        progress: {}
+        progress: {},
+        uploads: [],
+        intervals: {}
     }),
 
     methods: {
         upload() {
-            this.selected = true;
-            this.videos = Array.from(this.$refs.videos.files);
+            this.selected = true
+            this.videos = Array.from(this.$refs.videos.files)
 
             const uploaders = this.videos.map(video => {
-                const form = new FormData;
-                const self = this;
-                self.progress[video.name] = 0;
+                const form = new FormData()
 
-                form.append('video', video);
-                form.append('title', video.name);
+                this.progress[video.name] = 0
+
+                form.append('video', video)
+                form.append('title', video.name)
+
                 return axios.post(`${appUrl}/channels/${this.channel.id}/videos`, form, {
-                    onUploadProgress(event) {
-                        self.progress[video.name] = Math.ceil((event.loaded / event.total) * 100);
-                        self.$forceUpdate()
+                    onUploadProgress: (event) => {
+                        this.progress[video.name] = Math.ceil((event.loaded / event.total) * 100)
+
+                        this.$forceUpdate()
                     }
-                });
-            });
+                }).then(({ data }) => {
+                    this.uploads = [
+                        ...this.uploads,
+                        data
+                    ]
+                })
+            })
+
+            axios.all(uploaders)
+                .then(() => {
+                    this.videos = this.uploads
+
+                    this.videos.forEach(video => {
+                        this.intervals[video.id] = setInterval(() => {
+                            axios.get(`${appUrl}/videos/${video.id}`).then(({ data }) => {
+
+                                if (data.percentage === 100) {
+                                    clearInterval(this.intervals[video.id])
+                                }
+
+                                this.videos = this.videos.map(v => {
+                                    if (v.id === data.id) {
+                                        return data
+                                    }
+
+                                    return v
+                                })
+                            })
+                        }, 3000)
+                    })
+                })
         }
     }
 });

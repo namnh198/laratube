@@ -22,6 +22,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('channels', 'ChannelController')->only(['show', 'update']);
 
+Route::get('/videos/{video}', 'VideoController@show')->name('video.show');
+
 Route::group([
     'middleware' => ['web', 'auth']
 ], function() {
