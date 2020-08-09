@@ -8,12 +8,9 @@
                 <div class="card-header">{{ $channel->name }}</div>
 
                 <div class="card-body">
-                @if($channel->editable())
-                    <form id="update-channel" action="{{ route('channel.update', $channel->id)}}" enctype="multipart/form-data" method="POST">
-                        @csrf @method('put')
-
-                        <div class="form-group row justify-content-center">
-                            <div class="channel-avatar">
+                    <div class="form-group row justify-content-center">
+                        <div class="channel-avatar">
+                            @if($channel->editable())
                                 <div class="channel-avatar-overlay" onclick="document.getElementById('image').click()">
                                     <svg xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve" width="50px" height="50px" class=""><g><g>
                                         <path d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368   C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z M8,12.5h2v3H8   V12.5z M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6   h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" data-original="#000000" class="active-path" data-old_color="#ffffff" fill="#ffffff"/>
@@ -23,13 +20,22 @@
                                         </g></g>
                                     </svg>
                                 </div>
-
-                                <img src="{{ $channel->image() }}" alt="" class="img-fluid">
-                            </div>
-
-
+                            @endif
+                            <img src="{{ $channel->image() }}" alt="" class="img-fluid">
                         </div>
-
+                    </div>
+                    <div class="form-group text-center">
+                        <h4> {{ $channel->name }}</h4>
+                        <p class="text-muted">{{ $channel->description }}</p>
+                        <subscribe-button :channel="{{ $channel }}" :initial-subscriptions="{{ $channel->subscriptions }}" inline-template>
+                            <button @click="toggleSubscription" class="btn btn-danger">
+                                @{{ owner ? '' : subscribed ? 'Unsubscribe' : 'Subscribe' }} @{{ count }} @{{ owner ? 'Subscribers' : '' }}
+                            </button>
+                        </subscribe-button>
+                    </div>
+                @if($channel->editable())
+                    <form id="update-channel" action="{{ route('channels.update', $channel->id)}}" enctype="multipart/form-data" method="POST">
+                        @csrf @method('put')
                         <input onchange="document.getElementById('update-channel').submit()" type="file" id="image" name="image" class="d-none">
                         <div class="form-group">
                             <label for="name" class="form-control-label">Name</label>
@@ -42,16 +48,6 @@
 
                         <button type="submit" class="btn btn-info">Update Channel</button>
                     </form>
-                @else
-                <div class="form-group row justify-content-center">
-                    <div class="channel-avatar">
-                        <img src="{{ $channel->image() }}" alt="" class="img-fluid">
-                    </div>
-                </div>
-                <div class="form-group text-center">
-                    <h4> {{ $channel->name }}</h4>
-                    <p class="text-muted">{{ $channel->description }}</p>
-                </div>
                 @endif
                 </div>
             </div>

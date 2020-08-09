@@ -32,7 +32,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a href="{{ route('channel.show', auth()->user()->channel->id) }}" class="dropdown-item">
+                            <a href="{{ route('channels.show', auth()->user()->channel->id) }}" class="dropdown-item">
                                 My Channel
                             </a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
