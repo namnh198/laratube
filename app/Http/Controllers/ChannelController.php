@@ -8,34 +8,14 @@ use App\Channel;
 
 class ChannelController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth')->only('update');
-    }
-    public function index()
-    {
-        //
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
     }
 
     public function show(Channel $channel)
     {
         return view('channel.show', compact('channel'));
-    }
-
-    public function edit($id)
-    {
-        //
     }
 
     public function update(ChannelRequest $request, Channel $channel)
@@ -53,10 +33,5 @@ class ChannelController extends Controller
         ]);
 
         return back();
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }

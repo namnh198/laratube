@@ -40,4 +40,9 @@ class Channel extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->fit(\Spatie\Image\Manipulations::FIT_STRETCH, 100, 100);
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }
