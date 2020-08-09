@@ -21,4 +21,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('channels', 'ChannelController')->only(['show', 'update']);
-Route::resource('channels/{channel}/subscriptions', 'SubscriptionController')->only(['store', 'destroy'])->middleware('auth');
+
+Route::get('/videos/{video}', 'VideoController@show')->name('video.show');
+
+Route::group([
+    'middleware' => ['web', 'auth']
+], function() {
+    Route::resource('channels/{channel}/subscriptions', 'SubscriptionController')->only(['store', 'destroy'])->middleware('auth');
+    Route::get('channels/{channel}/videos', 'VideoController@upload')->name('channels.upload');
+    Route::post('channels/{channel}/videos', 'VideoController@store')->name('videos.store');
+});
+
