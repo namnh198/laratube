@@ -16,6 +16,7 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('channel_id');
+            $table->integer('percentage')->nullable();
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('path');
