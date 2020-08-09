@@ -5,7 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ $channel->name }}</div>
+                <div class="card-header d-flex justify-content-between">
+                    {{ $channel->name }}
+
+                    <a href="{{ route('channels.upload', $channel->id ) }}" class="btn btn-sm btn-info">Upload Video</a>
+                </div>
 
                 <div class="card-body">
                     <div class="form-group row justify-content-center">
@@ -32,9 +36,12 @@
                                 @{{ owner ? '' : subscribed ? 'Unsubscribe' : 'Subscribe' }} @{{ count }} @{{ owner ? 'Subscribers' : '' }}
                             </button>
                         </subscribe-button>
+                    @if($channel->editable())
+                        <button type="button" class="btn btn-primary" onclick="$('#update-channel').slideToggle()">Edit Channel</button>
+                    @endif
                     </div>
                 @if($channel->editable())
-                    <form id="update-channel" action="{{ route('channels.update', $channel->id)}}" enctype="multipart/form-data" method="POST">
+                    <form style="display: none" id="update-channel" action="{{ route('channels.update', $channel->id)}}" enctype="multipart/form-data" method="POST">
                         @csrf @method('put')
                         <input onchange="document.getElementById('update-channel').submit()" type="file" id="image" name="image" class="d-none">
                         <div class="form-group">
