@@ -7,8 +7,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     {{ $channel->name }}
-
-                    <a href="{{ route('channels.upload', $channel->id ) }}" class="btn btn-sm btn-info">Upload Video</a>
+                    @if($channel->editable())
+                        <a href="{{ route('channels.upload', $channel->id ) }}" class="btn btn-sm btn-info">Upload Video</a>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -31,11 +32,7 @@
                     <div class="form-group text-center">
                         <h4> {{ $channel->name }}</h4>
                         <p class="text-muted">{{ $channel->description }}</p>
-                        <subscribe-button :channel="{{ $channel }}" :initial-subscriptions="{{ $channel->subscriptions }}" inline-template>
-                            <button @click="toggleSubscription" class="btn btn-danger">
-                                @{{ owner ? '' : subscribed ? 'Unsubscribe' : 'Subscribe' }} @{{ count }} @{{ owner ? 'Subscribers' : '' }}
-                            </button>
-                        </subscribe-button>
+                        <subscribe-button :channel="{{ $channel }}" :initial-subscriptions="{{ $channel->subscriptions }}"></subscribe-button>
                     @if($channel->editable())
                         <button type="button" class="btn btn-primary" onclick="$('#update-channel').slideToggle()">Edit Channel</button>
                     @endif

@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Video;
-use FFMpeg;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,19 +33,17 @@ class ConvertForStreaming implements ShouldQueue
      */
     public function handle()
     {
-        $low = (new X264('aac'))->setKiloBitrate(100);
-        $medium = (new X264('aac'))->setKiloBitrate(250);
-        $high = (new X264('aac'))->setKiloBitrate(500);
+        $low = (new X264('aac'))->setKiloBitrate(250);
+        $medium = (new X264('aac'))->setKiloBitrate(500);
+        $high = (new X264('aac'))->setKiloBitrate(1000);
 
-        FFMpeg::fromDisk('local')
+        \FFMpeg::fromDisk('local')
             ->open($this->video->path)
             ->exportForHLS()
             ->onProgress(function($percentage) {
                 $this->video->update([
                     'percentage' => $percentage
                 ]);
-
-                echo "{$percentage}% transcoded";
             })
             ->addFormat($low)
             ->addFormat($medium)
